@@ -56,13 +56,13 @@ To get a local copy of the project up and running on your machine, follow these 
 2. Install the virtual environment and pre-commit hooks
 
    ```sh
-   just install
+   nix-shell
    ```
 
 3. Run the project
 
    ```sh
-   just run <package_name>
+   python3 ./src/fly_route.py --vis
    ```
 
 <!-- PROJECT FILE STRUCTURE -->
