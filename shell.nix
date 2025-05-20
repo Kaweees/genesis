@@ -14,8 +14,8 @@ pkgs.mkShell {
     if [ ! -d .venv ]; then
       python -m venv .venv
       # Now pip install works in the virtual environment
-      pip install git+https://github.com/Genesis-Embodied-AI/Genesis.git
-      pip install torch torchvision ipykernel pynput
+      pip install git+https://github.com/Genesis-Embodied-AI/Genesis.git --break-system-packages
+      pip install torch torchvision ipykernel pynput --break-system-packages
     fi
 
     # Activate virtual environment

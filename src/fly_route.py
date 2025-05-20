@@ -1,3 +1,4 @@
+import torch
 import genesis as gs
 import math
 from quadcopter_controller import DronePIDController
@@ -50,7 +51,12 @@ def fly_to_point(target, controller: DronePIDController, scene: gs.Scene, cam: C
 
 
 def main():
-    gs.init(backend=gs.metal)
+    if torch.cuda.is_available():
+        gs.init(backend=gs.cuda, precision="32")
+    elif torch.backends.mps.is_available():
+        gs.init(backend=gs.metal, precision="32")
+    else:
+        gs.init(backend=gs.cpu, precision="32")
 
     ##### scene #####
     scene = gs.Scene(show_viewer=True, sim_options=gs.options.SimOptions(dt=0.01))
