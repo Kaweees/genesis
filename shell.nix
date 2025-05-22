@@ -14,11 +14,12 @@ pkgs.mkShell {
     if [ ! -d .venv ]; then
       python -m venv .venv
       # Now pip install works in the virtual environment
+      source .venv/bin/activate
       pip install git+https://github.com/Genesis-Embodied-AI/Genesis.git --break-system-packages
       pip install torch torchvision ipykernel pynput --break-system-packages
+    else
+      # Activate virtual environment
+      source .venv/bin/activate
     fi
-
-    # Activate virtual environment
-    source .venv/bin/activate
   '';
 }
