@@ -9,10 +9,10 @@ requires-python = ">=3.12"
 readme = "README.md"
 
 dependencies = [
-    "genesis",
-    "pynput",
-    "torch",
-    "torchvision",
+  "genesis-world",
+  "pynput>=1.8.1",
+  "torch>=2.9.1",
+  "torchvision>=0.24.1",
 ]
 
 [dependency-groups]
@@ -21,4 +21,4 @@ dev = ["pre-commit>=4.1.0", "ipykernel>=6.29.5"]
 [project.scripts]
 
 [tool.uv.sources]
-genesis = { git = "https://github.com/Genesis-Embodied-AI/Genesis.git", branch = "main" }
+genesis-world = { git = "https://github.com/Genesis-Embodied-AI/Genesis.git", branch = "main" }

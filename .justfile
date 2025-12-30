@@ -24,7 +24,7 @@ install:
 update:
   @echo "Updating..."
   @uv sync --upgrade
-  @uv run pre-commit pre-commit autoupdate
+  @uv run pre-commit autoupdate
 
 # Run pre-commit
 pre_commit:
