@@ -1,25 +1,18 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 pkgs.mkShell {
-  buildInputs = [
-    pkgs.just # Just
-    pkgs.python311 # Python 3.11
-    pkgs.python311Packages.tkinter
-    pkgs.python311Packages.pip
+  buildInputs = with pkgs; [
+    python312 # Python 3.12
+    uv # Python package manager
+    nixfmt # Nix formatter
+    just # Just
   ];
 
   # Shell hook to set up environment
   shellHook = ''
-    # Create virtual environment if it doesn't exist
-    if [ ! -d .venv ]; then
-      python -m venv .venv
-      # Now pip install works in the virtual environment
-      source .venv/bin/activate
-      pip install git+https://github.com/Genesis-Embodied-AI/Genesis.git --break-system-packages
-      pip install torch torchvision ipykernel pynput --break-system-packages
-    else
-      # Activate virtual environment
-      source .venv/bin/activate
-    fi
+    export TMPDIR=/tmp
+    just install
   '';
 }

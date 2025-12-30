@@ -1,49 +1,64 @@
+# Like GNU `make`, but `just` rustier.
+# https://just.systems/
+# run `just` from this directory to see available commands
+
 alias i := install
-alias r := run
-alias t := test
-alias b := build
+alias u := update
 alias p := pre_commit
-alias c := clean
+alias b := build
+alias r := run
 alias ch := check
+alias c := clean
+alias f := format
+
+# Default command when 'just' is run without arguments
+default:
+  @just --list
 
 # Install the virtual environment and pre-commit hooks
 install:
-  uv sync
-  uv run pre-commit install
+  @echo "Installing..."
+  @uv sync
+  @uv run pre-commit install --install-hooks
+
+update:
+  @echo "Updating..."
+  @uv sync --upgrade
+  @uv run pre-commit pre-commit autoupdate
 
 # Run pre-commit
 pre_commit:
- uv run pre-commit run -a
+  @echo "Running pre-commit..."
+  @uv run pre-commit run -a
 
-# Clean the project
-clean:
-  # Remove cached files
-  find . -type d -name "__pycache__" -exec rm -r {} +
-  find . -type d -name "*.egg-info" -exec rm -r {} +
+# Build the project
+build target:
+  @echo "Building..."
+  @uv run hatch build --target {{target}}
 
 # Run a package
-run *args='core':
-  uv run {{args}}
-
-# Test the code with pytest
-test:
-  uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report=xml
+run package="" *args="":
+  @echo "Running..."
+  uv run {{package}} {{args}}
 
 # Run code quality tools
 check:
-  # Check lock file consistency
-  uv lock --locked
-  # Run pre-commit
-  uv run pre-commit run -a
-  # Run mypy
-  uv run mypy .
-  # Run deptry with ignored issues
-  uv run deptry . --ignore=DEP002,DEP003
+  @echo "Checking..."
+  @uv lock --locked
+  @uv run pre-commit run -a
 
-# Add scripts
-add_scripts:
-  uv add --script scripts/this.py 'typer>=0.12.5'
+# Remove build artifacts and non-essential files
+clean:
+  @echo "Cleaning..."
+  @find . -type d -name ".venv" -exec rm -rf {} +
+  @find . -type d -name "__pycache__" -exec rm -rf {} +
+  @find . -type d -name "*.ruff_cache" -exec rm -rf {} +
+  @find . -type d -name "*.egg-info" -exec rm -rf {} +
+  @find . -type d -name "logs" -exec rm -rf {} +
+  @find . -type d -name "viser-client" -exec rm -rf {} +
+  @find . -type d -name "wandb" -exec rm -rf {} +
 
-# Build dockerfile for DAG
-build target:
-  docker build -t packages/{{target}} --build-arg PACKAGE={{target}} .
+# Format the project
+format:
+  @echo "Formatting..."
+  @find . -name "*.nix" -type f -exec nixfmt {} \;
